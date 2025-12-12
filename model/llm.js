@@ -1,58 +1,54 @@
 import fetch from 'node-fetch'
 
-// In a real scenario, these should be loaded from a config file (e.g., config.yaml)
+// Configuration
 const API_ENDPOINT = process.env.LLM_API_ENDPOINT || 'https://api.openai.com/v1/chat/completions'
 const API_KEY = process.env.LLM_API_KEY || ''
-const MODEL = process.env.LLM_MODEL || 'gpt-3.5-turbo'
+// Use gemini-flash-latest as requested for long context
+const MODEL = process.env.LLM_MODEL || 'gemini-flash-latest'
 
 export default class LLM {
   static async analyze(history) {
-    // Preprocess: Take last 300 messages to fit in context window and reduce noise
-    // Format: [HH:MM] Nickname: Content
-    const recentMessages = history.slice(-300).map(m => {
+    // Increase context window to 1000 messages (Gemini Flash can handle it)
+    const recentMessages = history.slice(-1000).map(m => {
         const date = new Date(m.time)
         const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-        // Limit content length per message
-        const content = m.content.length > 100 ? m.content.substring(0, 100) + '...' : m.content
+        // Limit content length per message strictly to avoid massive tokens if someone pasted a novel
+        const content = m.content.length > 200 ? m.content.substring(0, 200) + '...' : m.content
         return `[${timeStr}] ${m.nickname}: ${content}`
     }).join('\n')
 
     const prompt = `
-You are an intelligent group chat analyst. Your task is to analyze the following chat history and generate a structured report.
+You are an entertaining and intelligent group chat analyst. Your task is to analyze the chat history and generate a fun, structured report.
 
-Return ONLY a valid JSON object. Do not wrap it in markdown code blocks. The JSON should have this structure:
+**REQUIREMENTS:**
+1. **MBTI & User Persona**: Entertainment speculation. Guess MBTI based on logic, emotion, and interaction. If info is insufficient, use stereotypes humorously.
+2. **Group Bible (Quotes)**: Find sentences that were repeated multiple times, used many exclamation marks, or are absurdly funny. The "context" must explain *why* it was funny or what was happening.
+3. **Language**: Use a fun, slightly "toxic" (playfully mean) or "internet slang" style suitable for a close friends group.
+
+**OUTPUT FORMAT**:
+Return ONLY a valid JSON object. No markdown formatting.
+Structure:
 {
-  "summary": "A concise paragraph summarizing the main discussions and atmosphere of the chat today.",
+  "summary": "A narrative summary of the day's events, formatted as a story.",
   "hot_topics": [
-    { "title": "Topic Name", "count": 10, "description": "Brief description of the discussion" }
+    { "title": "Topic", "count": 10, "description": "What happened" }
   ],
-  "active_users_analysis": [
-    { "nickname": "User Name", "description": "One sentence describing their role/behavior today (e.g. 'The jokester', 'The tech expert')" }
+  "mbti_analysis": [
+    { "nickname": "User", "mbti": "INTJ", "description": "Why you think so (funny reason)" }
   ],
-  "sentiment": "One of: Positive, Neutral, Negative, Chaos",
-  "suggestion": "A fun or helpful suggestion for the group based on the chat."
+  "group_bible": [
+    { "quote": "The Quote", "user": "User", "context": "Context description" }
+  ],
+  "sentiment": "Positive/Negative/Chaos",
+  "suggestion": "A fun suggestion for the group."
 }
 
-Chat History:
+**CHAT HISTORY**:
 ${recentMessages}
 `
 
     if (!API_KEY) {
-        // Mock response if no API key is configured
-        return {
-            summary: "（演示数据）群里今天充满了欢快的气氛，大家主要讨论了关于插件开发和午饭吃什么的话题。虽然有些许争论，但整体友善。",
-            hot_topics: [
-                { title: "插件开发", count: 42, description: "关于K2GroupReport插件的架构讨论" },
-                { title: "午餐", count: 15, description: "讨论中午吃麦当劳还是肯德基" },
-                { title: "摸鱼", count: 8, description: "大家都在上班摸鱼" }
-            ],
-            active_users_analysis: [
-                { nickname: "也就是Jules", description: "疯狂写代码的工具人" },
-                { nickname: "路人甲", description: "一直在发表情包" }
-            ],
-            sentiment: "Positive",
-            suggestion: "建议大家早点休息，不要熬夜写代码。"
-        }
+        return this.getMockData()
     }
 
     try {
@@ -68,7 +64,8 @@ ${recentMessages}
                     { role: 'system', content: 'You are a helpful assistant that analyzes chat logs and outputs strict JSON.' },
                     { role: 'user', content: prompt }
                 ],
-                temperature: 0.7
+                temperature: 0.7,
+                max_tokens: 4000
             })
         })
 
@@ -79,21 +76,37 @@ ${recentMessages}
         const data = await response.json()
         let content = data.choices[0].message.content
 
-        // Strip Markdown code blocks if present
+        // Clean up markdown
         content = content.replace(/^```json\s*/, '').replace(/\s*```$/, '')
 
         return JSON.parse(content)
 
     } catch (err) {
         console.error('[K2GroupReport] LLM Analysis Error:', err)
-        // Return a fallback structure
         return {
-            summary: "分析服务暂时不可用。",
-            hot_topics: [],
-            active_users_analysis: [],
-            sentiment: "Unknown",
-            suggestion: "请检查后台日志。"
+            ...this.getMockData(),
+            summary: "AI 分析服务连接失败，以下为模拟数据。"
         }
     }
+  }
+
+  static getMockData() {
+      return {
+          summary: "今天群里就像菜市场一样热闹。Jules 还在苦逼地写代码，而其他人似乎都在摸鱼。主要讨论了如何把这个插件变得更花哨，以及大家对于 MBTI 的玄学探讨。",
+          hot_topics: [
+              { title: "插件开发", count: 99, description: "Jules 被迫营业的一天" },
+              { title: "午饭吃啥", count: 20, description: "人类终极哲学问题" }
+          ],
+          mbti_analysis: [
+              { nickname: "Jules", mbti: "ISTJ", description: "一丝不苟的代码机器，没有感情的杀手。" },
+              { nickname: "路人乙", mbti: "ENFP", description: "在那儿傻乐，完全不知道发生了什么。" }
+          ],
+          group_bible: [
+              { quote: "我再也不改需求了！", user: "Jules", context: "当被要求第100次修改UI时发出的绝望呐喊。" },
+              { quote: "6", user: "复读机一号", context: "对所有事物的通用评价。" }
+          ],
+          sentiment: "Chaos",
+          suggestion: "建议群主发个红包安抚一下民心。"
+      }
   }
 }
