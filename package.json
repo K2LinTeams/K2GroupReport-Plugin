@@ -1,0 +1,11 @@
+{
+  "name": "yunzai-k2groupreport-plugin",
+  "version": "1.0.0",
+  "description": "Group chat analysis plugin for Yunzai-Bot",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "node-fetch": "^3.3.0",
+    "echarts": "^5.4.3"
+  }
+}
