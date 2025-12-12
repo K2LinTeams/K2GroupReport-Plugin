@@ -50,6 +50,16 @@ export function supportGuoba() {
           }
         },
         {
+          field: 'llm.proxy',
+          label: '代理地址',
+          bottomHelpMessage: '可选，例如 http://127.0.0.1:7890',
+          component: 'Input',
+          required: false,
+          componentProps: {
+            placeholder: 'http://127.0.0.1:7890'
+          }
+        },
+        {
           component: 'Divider',
           label: '数据收集设置'
         },

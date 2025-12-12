@@ -3,7 +3,7 @@ import Config from '../config/config.js'
 
 export default class LLM {
   static async analyze(history) {
-    const { endpoint: API_ENDPOINT, apiKey: API_KEY, model: MODEL } = Config.llm
+    const { endpoint: API_ENDPOINT, apiKey: API_KEY, model: MODEL, proxy: PROXY } = Config.llm
 
     // Increase context window to 1000 messages (Gemini Flash can handle it)
     const recentMessages = history.slice(-1000).map(m => {
@@ -49,12 +49,23 @@ ${recentMessages}
     }
 
     try {
+        let agent = null
+        if (PROXY) {
+            try {
+                const { HttpsProxyAgent } = await import('https-proxy-agent')
+                agent = new HttpsProxyAgent(PROXY)
+            } catch (err) {
+                console.error('[K2GroupReport] Failed to load https-proxy-agent:', err)
+            }
+        }
+
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${API_KEY}`
             },
+            agent,
             body: JSON.stringify({
                 model: MODEL,
                 messages: [
