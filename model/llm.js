@@ -1,13 +1,10 @@
 import fetch from 'node-fetch'
-
-// Configuration
-const API_ENDPOINT = process.env.LLM_API_ENDPOINT || 'https://api.openai.com/v1/chat/completions'
-const API_KEY = process.env.LLM_API_KEY || ''
-// Use gemini-flash-latest as requested for long context
-const MODEL = process.env.LLM_MODEL || 'gemini-flash-latest'
+import Config from '../config/config.js'
 
 export default class LLM {
   static async analyze(history) {
+    const { endpoint: API_ENDPOINT, apiKey: API_KEY, model: MODEL } = Config.llm
+
     // Increase context window to 1000 messages (Gemini Flash can handle it)
     const recentMessages = history.slice(-1000).map(m => {
         const date = new Date(m.time)
