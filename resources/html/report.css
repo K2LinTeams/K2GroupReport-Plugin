@@ -1,0 +1,162 @@
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #f0f2f5;
+  padding-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #1a1a1a;
+}
+
+.header .meta {
+  margin-top: 10px;
+  color: #888;
+  font-size: 14px;
+}
+
+.header .meta span {
+  margin: 0 10px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-left: 10px;
+  border-left: 4px solid #1890ff;
+  color: #333;
+}
+
+.summary-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #555;
+  background: #f9f9fc;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.sentiment-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sentiment-badge.Positive { background: #e6ffec; color: #52c41a; }
+.sentiment-badge.Neutral { background: #f0f2f5; color: #595959; }
+.sentiment-badge.Negative { background: #fff1f0; color: #ff4d4f; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  background: linear-gradient(135deg, #fff 0%, #f8faff 100%);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #eef;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1890ff;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.half-card {
+  flex: 1;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #eee;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.topic-name, .user-name {
+  font-weight: bold;
+  font-size: 15px;
+  color: #333;
+}
+
+.topic-count {
+  float: right;
+  font-size: 12px;
+  color: #999;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.topic-desc, .user-desc {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.suggestion-card {
+    background: #fffbe6;
+    border-color: #ffe58f;
+}
+
+.suggestion-text {
+    font-size: 15px;
+    color: #876800;
+}
