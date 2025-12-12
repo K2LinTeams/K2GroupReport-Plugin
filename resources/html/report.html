@@ -108,6 +108,25 @@
         </div>
     </section>
 
+    <!-- Emoji War -->
+    <section class="section">
+        <div class="section-title">⚔️ 表情包战争</div>
+        <div class="emoji-grid">
+            {{each gamification.emojiWar emoji index}}
+            <div class="emoji-card">
+                <div class="emoji-rank">#{{index + 1}}</div>
+                <div class="emoji-img-container">
+                    <img src="{{emoji.url}}" referrerpolicy="no-referrer" alt="Meme" />
+                </div>
+                <div class="emoji-stat">{{emoji.count}} 次</div>
+            </div>
+            {{/each}}
+            {{if gamification.emojiWar.length === 0}}
+            <div class="no-data">暂无战况</div>
+            {{/if}}
+        </div>
+    </section>
+
     <!-- Composition -->
     <section class="section">
         <div class="section-title">🧪 成分分析</div>

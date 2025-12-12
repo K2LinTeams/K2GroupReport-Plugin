@@ -31,13 +31,21 @@ export default class Collector {
 
     // Extract relevant info
     let hasImage = false
+    let images = []
     let hasEmoji = false
     let mentions = []
     let isReply = false
     let replyTo = null
 
     if (Array.isArray(e.message)) {
-        hasImage = e.message.some(m => m.type === 'image')
+        e.message.forEach(m => {
+            if (m.type === 'image') {
+                hasImage = true
+                if (m.url && m.md5) {
+                    images.push({ url: m.url, md5: m.md5 })
+                }
+            }
+        })
         hasEmoji = e.message.some(m => m.type === 'face')
         // Extract all mentioned user IDs
         mentions = e.message
@@ -60,6 +68,7 @@ export default class Collector {
       content: e.toString(),
       type: e.img ? 'image' : 'text', // Simple heuristic
       hasImage,
+      images,
       hasEmoji,
       mentions,
       isReply,
