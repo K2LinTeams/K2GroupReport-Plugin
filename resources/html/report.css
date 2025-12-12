@@ -247,3 +247,61 @@ body {
 .Positive { color: #2ecc71; border-color: #2ecc71; }
 .Negative { color: #e74c3c; border-color: #e74c3c; }
 .Chaos { color: #9b59b6; border-color: #9b59b6; }
+
+/* Emoji War */
+.emoji-grid {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.emoji-card {
+    background: #fdfdfd;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #eee;
+    min-width: 100px;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.emoji-rank {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7em;
+}
+
+.emoji-img-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emoji-img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.emoji-stat {
+    font-size: 0.9em;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.no-data {
+    color: #999;
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+}

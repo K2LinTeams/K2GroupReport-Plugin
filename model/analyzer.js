@@ -237,48 +237,28 @@ export default class Analyzer {
     }
 
     static getEmojiWar(history) {
-        const emojiCounts = {}
+        // Map: md5 -> { count, url }
+        const imageStats = {}
+
         history.forEach(msg => {
-            // Match [CQ:face,id=123]
-            const faceMatches = msg.content.match(/\[CQ:face,id=(\d+)\]/g)
-            if (faceMatches) {
-                faceMatches.forEach(m => {
-                    const id = m.match(/\d+/)[0]
-                    emojiCounts[id] = (emojiCounts[id] || 0) + 1
+            if (msg.images && Array.isArray(msg.images)) {
+                msg.images.forEach(img => {
+                    if (img.md5) {
+                        if (!imageStats[img.md5]) {
+                            imageStats[img.md5] = { count: 0, url: img.url }
+                        }
+                        imageStats[img.md5].count++
+                        // Update with latest URL (handles expiry)
+                        imageStats[img.md5].url = img.url
+                    }
                 })
             }
         })
 
-        // Sort
-        const sorted = Object.entries(emojiCounts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 5)
-            .map(([id, count]) => ({ id, count, url: `https://q1.qlogo.cn/g?b=qq&nk=${id}&s=100` }))
-            // Wait, face ID is not user ID. Face ID is QQ system face.
-            // URL for system face is usually not easy to get via simple URL unless we have a mapping.
-            // But user asked for "Emoji War", maybe implies Custom Images too?
-            // "Expression package war" usually means custom images.
-            // Custom images have [CQ:image,file=...,url=...]
-            // The URL is available in the CQ code.
-
-            // Let's try to extract image URLs if possible.
-            // Note: Yunzai stores `e.img` array.
-            // But our collector stored `content` as string.
-            // If the string content has [CQ:image,file=...,url=...], we can parse it.
-            // However, typical CQ code for image in Yunzai might vary.
-            // Let's stick to "System Faces" for now or skip image visualization if we can't reliably get URLs.
-            // Actually, for "Emoji War", displaying the count of top system faces is easiest.
-            // We can construct a URL for standard QQ faces if we know the mapping, but it's hard.
-            // Let's just return the IDs and maybe frontend can render them if it knows how, or just list "Face ID X".
-
-            // Alternative: Just return the count of "Images Sent" by user?
-            // No, the requirement is "Which emoji/sticker is used most".
-
-            // If we can't display the image, this feature is weak.
-            // I will return the ID. In `report.html`, I might try to source standard QQ faces if I can find a CDN.
-            // Standard QQ faces CDN: https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/{id}.gif (Wechat?)
-            // Or use a local resource.
-            // Let's stick to returning IDs.
+        // Sort by count
+        const sorted = Object.values(imageStats)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5) // Top 5
 
         return sorted
     }
