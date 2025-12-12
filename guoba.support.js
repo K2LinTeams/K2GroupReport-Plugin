@@ -5,9 +5,9 @@ export function supportGuoba() {
     pluginInfo: {
       name: 'K2GroupReport',
       title: '群聊报表',
-      author: '@Jules',
-      authorLink: 'https://github.com/Jules',
-      link: 'https://github.com/Jules/K2GroupReport-Plugin',
+      author: '@K2Lin_Teams',
+      authorLink: 'https://github.com/K2LinTeams',
+      link: 'https://github.com/K2LinTeams/K2GroupReport-Plugin',
       isV3: true,
       isCar: false,
       description: '生成群聊分析报表，包含词云、社交网络、情感分析等'
