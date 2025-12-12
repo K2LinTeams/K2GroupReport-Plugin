@@ -32,10 +32,25 @@ export default class Collector {
     // Extract relevant info
     let hasImage = false
     let hasEmoji = false
+    let mentions = []
+    let isReply = false
+    let replyTo = null
 
     if (Array.isArray(e.message)) {
         hasImage = e.message.some(m => m.type === 'image')
         hasEmoji = e.message.some(m => m.type === 'face')
+        // Extract all mentioned user IDs
+        mentions = e.message
+            .filter(m => m.type === 'at')
+            .map(m => m.qq)
+    }
+
+    // Check if it's a reply
+    if (e.source) {
+        isReply = true
+        if (e.source.user_id) {
+            replyTo = e.source.user_id
+        }
     }
 
     const record = {
@@ -45,7 +60,10 @@ export default class Collector {
       content: e.toString(),
       type: e.img ? 'image' : 'text', // Simple heuristic
       hasImage,
-      hasEmoji
+      hasEmoji,
+      mentions,
+      isReply,
+      replyTo
     }
 
     history.push(record)
