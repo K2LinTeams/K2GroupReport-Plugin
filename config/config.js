@@ -6,9 +6,9 @@ const ConfigFile = path.join(ConfigDir, 'config.json')
 
 const DefaultConfig = {
     llm: {
-        endpoint: process.env.LLM_API_ENDPOINT || 'https://api.openai.com/v1/chat/completions',
+        endpoint: process.env.LLM_API_ENDPOINT || 'https://generativelanguage.googleapis.com/v1beta/models',
         apiKey: process.env.LLM_API_KEY || '',
-        model: process.env.LLM_MODEL || 'gemini-flash-latest'
+        model: process.env.LLM_MODEL || 'gemini-1.5-flash'
     },
     collector: {
         maxHistory: 2000

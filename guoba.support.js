@@ -16,37 +16,37 @@ export function supportGuoba() {
       schemas: [
         {
           component: 'Divider',
-          label: 'LLM 设置'
+          label: 'LLM 设置 (Google Gemini)'
         },
         {
           field: 'llm.endpoint',
-          label: 'API 地址',
-          bottomHelpMessage: 'OpenAI 兼容接口地址',
+          label: 'API Base URL',
+          bottomHelpMessage: 'Google API 基础地址 (默认为官方地址)',
           component: 'Input',
           required: true,
           componentProps: {
-            placeholder: 'https://api.openai.com/v1/chat/completions'
+            placeholder: 'https://generativelanguage.googleapis.com/v1beta/models'
           }
         },
         {
           field: 'llm.apiKey',
           label: 'API Key',
-          bottomHelpMessage: 'LLM API 密钥',
+          bottomHelpMessage: 'Google Gemini API 密钥',
           component: 'Input',
           required: true,
           componentProps: {
             type: 'password',
-            placeholder: 'sk-...'
+            placeholder: 'AIza...'
           }
         },
         {
           field: 'llm.model',
           label: '模型名称',
-          bottomHelpMessage: '例如 gemini-flash-latest, gpt-4o',
+          bottomHelpMessage: '例如 gemini-1.5-flash',
           component: 'Input',
           required: true,
           componentProps: {
-            placeholder: 'gemini-flash-latest'
+            placeholder: 'gemini-1.5-flash'
           }
         },
         {
