@@ -3,7 +3,7 @@ import Config from '../config/config.js'
 
 export default class LLM {
   static async analyze(history) {
-    const { endpoint: API_ENDPOINT, apiKey: API_KEY, model: MODEL } = Config.llm
+    const { endpoint: BASE_URL, apiKey: API_KEY, model: MODEL } = Config.llm
 
     // Increase context window to 1000 messages (Gemini Flash can handle it)
     const recentMessages = history.slice(-1000).map(m => {
@@ -49,31 +49,48 @@ ${recentMessages}
     }
 
     try {
-        const response = await fetch(API_ENDPOINT, {
+        const url = `${BASE_URL}/${MODEL}:generateContent?key=${API_KEY}`
+
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_KEY}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: MODEL,
-                messages: [
-                    { role: 'system', content: 'You are a helpful assistant that analyzes chat logs and outputs strict JSON.' },
-                    { role: 'user', content: prompt }
+                systemInstruction: {
+                    parts: [
+                        { text: "You are a helpful assistant that analyzes chat logs and outputs strict JSON." }
+                    ]
+                },
+                contents: [
+                    {
+                        parts: [
+                            { text: prompt }
+                        ]
+                    }
                 ],
-                temperature: 0.7,
-                max_tokens: 4000
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 8192,
+                    responseMimeType: "application/json"
+                }
             })
         })
 
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.statusText}`)
+            const errText = await response.text();
+            throw new Error(`API request failed: ${response.status} ${response.statusText} - ${errText}`)
         }
 
         const data = await response.json()
-        let content = data.choices[0].message.content
 
-        // Clean up markdown
+        if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content) {
+             throw new Error("No candidates returned from Gemini API");
+        }
+
+        let content = data.candidates[0].content.parts[0].text
+
+        // Clean up markdown if any remains (though responseMimeType should handle it)
         content = content.replace(/^```json\s*/, '').replace(/\s*```$/, '')
 
         return JSON.parse(content)
@@ -82,7 +99,7 @@ ${recentMessages}
         console.error('[K2GroupReport] LLM Analysis Error:', err)
         return {
             ...this.getMockData(),
-            summary: "AI 分析服务连接失败，以下为模拟数据。"
+            summary: "AI 分析服务连接失败，以下为模拟数据。错误信息: " + err.message
         }
     }
   }
