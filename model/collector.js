@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
+import Config from '../config/config.js'
 
 const DataDir = './data/K2GroupReport/history'
-const MaxHistory = 2000
 
 if (!fs.existsSync(DataDir)) {
   fs.mkdirSync(DataDir, { recursive: true })
@@ -14,6 +14,8 @@ export default class Collector {
    * @param {object} e - The event object (message)
    */
   static async save(e) {
+    const MaxHistory = Config.collector.maxHistory
+
     if (!e.group_id) return
 
     const groupId = e.group_id
