@@ -13,10 +13,10 @@
 
     <!-- 1. Title Card -->
     <section class="section title-card">
-      <h1>{{group_name}}</h1>
+      <h1>Test Group</h1>
       <h2>ANNUAL REPORT DAILY EDITION</h2>
-      <div class="date-badge">{{date}}</div>
-      <p style="margin-top: 20px; color: #888;">Generate Time: {{generated_time}}</p>
+      <div class="date-badge">2023-10-27</div>
+      <p style="margin-top: 20px; color: #888;">Generate Time: 12:00:00</p>
     </section>
 
     <!-- 2. Narrative Summary -->
@@ -26,7 +26,7 @@
         <span class="section-subtitle">STORY</span>
       </div>
       <div class="narrative-text">
-        {{summary}}
+        This is a narrative summary of the day. The group was very active during lunch time, discussing the latest tech news. Sentiment was mostly positive with some chaos in the evening.
       </div>
     </section>
 
@@ -38,16 +38,16 @@
       </div>
 
       <!-- Night Owl Award -->
-      {{if gamification.toxic.nightOwl}}
+
       <div class="award-highlight">
         <div class="award-icon">🦉</div>
         <div class="award-content">
           <div class="award-title">修仙冠军 (0-5点)</div>
-          <div class="award-winner">{{gamification.toxic.nightOwl.nickname}}</div>
+          <div class="award-winner">OwlUser</div>
         </div>
-        <div class="award-stat">{{gamification.toxic.nightOwl.count}} 条</div>
+        <div class="award-stat">50 条</div>
       </div>
-      {{/if}}
+
 
       <div id="heatmapChart" class="chart-container"></div>
       <p style="text-align: center; font-size: 0.8em; color: #666;">* 颜色越深代表消息越多</p>
@@ -66,11 +66,9 @@
             <div class="mini-award-icon">🌊</div>
             <div class="mini-award-name">话痨之王</div>
             <div class="mini-award-val">
-                {{if gamification.toxic.wordKing}}
-                    {{gamification.toxic.wordKing.nickname}}
-                {{else}}
-                    虚位以待
-                {{/if}}
+
+                    ChattyUser
+
             </div>
         </div>
         <!-- Repeater -->
@@ -78,11 +76,9 @@
             <div class="mini-award-icon">🦜</div>
             <div class="mini-award-name">人类本质</div>
             <div class="mini-award-val">
-                {{if gamification.toxic.repeater}}
-                    {{gamification.toxic.repeater.nickname}}
-                {{else}}
-                    虚位以待
-                {{/if}}
+
+                    CopyCat
+
             </div>
         </div>
       </div>
@@ -98,16 +94,16 @@
       </div>
 
       <!-- Dragon King Award -->
-      {{if gamification.toxic.dragonKing}}
+
       <div class="award-highlight" style="background: rgba(52, 152, 219, 0.1); border-color: rgba(52, 152, 219, 0.3);">
         <div class="award-icon">🐲</div>
         <div class="award-content">
           <div class="award-title">今日龙王</div>
-          <div class="award-winner">{{gamification.toxic.dragonKing.nickname}}</div>
+          <div class="award-winner">DragonUser</div>
         </div>
-        <div class="award-stat">{{gamification.toxic.dragonKing.count}} 条</div>
+        <div class="award-stat">200 条</div>
       </div>
-      {{/if}}
+
 
       <div id="socialChart" class="chart-container large"></div>
     </section>
@@ -118,7 +114,7 @@
         <h3 class="section-title">情绪波动</h3>
         <span class="section-subtitle">VIBE CHECK</span>
       </div>
-      <p style="margin-bottom: 10px;">今日整体基调: <span class="highlight">{{sentiment}}</span></p>
+      <p style="margin-bottom: 10px;">今日整体基调: <span class="highlight">Positive</span></p>
       <div id="sentimentChart" class="chart-container"></div>
     </section>
 
@@ -129,17 +125,22 @@
         <span class="section-subtitle">MEMES</span>
       </div>
       <div class="emoji-scroller">
-        {{each gamification.emojiWar emoji index}}
+
         <div class="emoji-item">
             <div class="emoji-img-container">
-                <img src="{{emoji.url}}" referrerpolicy="no-referrer" class="emoji-img" alt="Meme" />
+                <img src="https://placehold.co/100x100?text=Emoji1" referrerpolicy="no-referrer" class="emoji-img" alt="Meme" />
             </div>
-            <div class="emoji-rank">#{{index + 1}} ({{emoji.count}})</div>
+            <div class="emoji-rank">#1 (10)</div>
         </div>
-        {{/each}}
-        {{if gamification.emojiWar.length === 0}}
+        <div class="emoji-item">
+            <div class="emoji-img-container">
+                <img src="https://placehold.co/100x100?text=Emoji2" referrerpolicy="no-referrer" class="emoji-img" alt="Meme" />
+            </div>
+            <div class="emoji-rank">#2 (8)</div>
+        </div>
+
         <div style="width: 100%; text-align: center; color: #666;">暂无战况</div>
-        {{/if}}
+
       </div>
     </section>
 
@@ -149,12 +150,15 @@
             <span class="section-subtitle">QUOTES</span>
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px;">
-            {{each group_bible bible}}
-            <div class="bible-card">
-                <div class="bible-quote">{{bible.quote}}</div>
-                <div class="bible-meta">—— {{bible.user}} ({{bible.context}})</div>
-            </div>
-            {{/each}}
+
+        <div class="bible-card">
+            <div class="bible-quote">This is a funny quote!</div>
+            <div class="bible-meta">—— UserA (Context A)</div>
+        </div>
+        <div class="bible-card">
+            <div class="bible-quote">Another funny quote.</div>
+            <div class="bible-meta">—— UserB (Context B)</div>
+        </div>
         </div>
     </section>
 
@@ -164,15 +168,21 @@
             <span class="section-subtitle">PERSONA</span>
         </div>
         <div class="mbti-list">
-            {{each mbti_analysis user}}
-            <div class="mbti-item">
-                <div class="mbti-tag">{{user.mbti}}</div>
-                <div style="flex: 1;">
-                    <div style="font-weight: bold;">{{user.nickname}}</div>
-                    <div class="mbti-desc">{{user.description}}</div>
-                </div>
+
+        <div class="mbti-item">
+            <div class="mbti-tag">INTJ</div>
+            <div style="flex: 1;">
+                <div style="font-weight: bold;">UserC</div>
+                <div class="mbti-desc">Analyzing everything.</div>
             </div>
-            {{/each}}
+        </div>
+        <div class="mbti-item">
+            <div class="mbti-tag">ENFP</div>
+            <div style="flex: 1;">
+                <div style="font-weight: bold;">UserD</div>
+                <div class="mbti-desc">Happy go lucky.</div>
+            </div>
+        </div>
         </div>
     </section>
 
@@ -180,10 +190,10 @@
 
   <script>
     // --- Data Injection ---
-    const heatmapData = {{@heatmap}};
-    const wordCloudData = {{@wordcloud}};
-    const socialData = {{@social}};
-    const sentimentData = {{@sentimentCurve}};
+    const heatmapData = [0, 0, 0, 0, 5, 10, 20, 50, 80, 100, 120, 80, 60, 40, 20, 10, 5, 2, 0, 0, 10, 20, 5, 0];
+    const wordCloudData = [{"name": "Test", "value": 100}, {"name": "Code", "value": 80}, {"name": "AI", "value": 60}];
+    const socialData = {"nodes": [{"id": "1", "name": "UserA", "value": 10}, {"id": "2", "name": "UserB", "value": 20}, {"id": "3", "name": "UserC", "value": 30}], "links": [{"source": "1", "target": "2", "value": 5}, {"source": "2", "target": "3", "value": 8}]};
+    const sentimentData = {"times": ["10:00", "11:00", "12:00", "13:00", "14:00"], "scores": [10, 20, 15, -5, 10]};
 
     const chartTextColor = '#ccc';
     const chartLineColor = 'rgba(255, 255, 255, 0.1)';
