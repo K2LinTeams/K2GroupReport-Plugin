@@ -10,6 +10,7 @@ export function supportGuoba() {
       link: 'https://github.com/K2LinTeams/K2GroupReport-Plugin',
       isV3: true,
       isCar: false,
+      icon: 'iconamoon:file-add-light',
       description: '生成群聊分析报表，包含词云、社交网络、情感分析等'
     },
     configInfo: {
